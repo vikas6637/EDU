@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout Demo - Educare Institute</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .demo-section {
+            margin: 30px 0;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+        
+        .demo-section h3 {
+            margin: 0 0 20px 0;
+            color: #2c3e50;
+            font-size: 1.5em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+        
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #e67e22;
+            transform: translateY(-2px);
+        }
+        
+        .status-card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .status-online { background: #27ae60; }
+        .status-offline { background: #e74c3c; }
+        .status-loading { background: #f39c12; }
+        
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-list i {
+            color: #27ae60;
+            width: 20px;
+        }
+        
+        .logout-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .logout-message i { font-size: 16px; }
+        
+        .info-box {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #0c5460;
+        }
+        
+        .info-box i {
+            margin-right: 8px;
+            color: #17a2b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-sign-out-alt"></i> Logout Functionality Demo</h1>
+            <p>Testing and demonstrating the improved logout system for Educare Institute</p>
+        </div>
+        
+        <div class="content">
+            <div class="demo-section">
+                <h3><i class="fas fa-info-circle"></i> Current Session Status</h3>
+                <div id="sessionStatus">Checking session status...</div>
+            </div>
+            
+            <div class="demo-section">
+                <h3><i class="fas fa-cogs"></i> Logout Functions</h3>
+                <p>Test different logout methods to ensure they work correctly:</p>
+                
+                <div class="button-group">
+                    <button class="btn btn-danger" onclick="testDashboardLogout()">
+                        <i class="fas fa-user"></i> Dashboard Logout
+                    </button>
+                    <button class="btn btn-warning" onclick="testSessionManagerLogout()">
+                        <i class="fas fa-cog"></i> Session Manager Logout
+                    </button>
+                    <button class="btn btn-primary" onclick="testUtilityLogout()">
+                        <i class="fas fa-tools"></i> Utility Logout
+                    </button>
+                    <button class="btn btn-success" onclick="testManualLogout()">
+                        <i class="fas fa-hand-paper"></i> Manual Logout
+                    </button>
+                </div>
+                
+                <div id="logoutResult"></div>
+            </div>
+            
+            <div class="demo-section">
+                <h3><i class="fas fa-database"></i> Session Data</h3>
+                <p>View all stored session information:</p>
+                <button class="btn btn-primary" onclick="showAllSessionData()">
+                    <i class="fas fa-eye"></i> Show Session Data
+                </button>
+                <div id="sessionData"></div>
+            </div>
+            
+            <div class="demo-section">
+                <h3><i class="fas fa-list-check"></i> Features Implemented</h3>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check"></i> Comprehensive session clearing (localStorage, sessionStorage, cookies)</li>
+                    <li><i class="fas fa-check"></i> Multiple logout methods for different scenarios</li>
+                    <li><i class="fas fa-check"></i> Automatic redirect to login page after logout</li>
+                    <li><i class="fas fa-check"></i> User-friendly logout messages and confirmations</li>
+                    <li><i class="fas fa-check"></i> Session validation and authentication checks</li>
+                    <li><i class="fas fa-check"></i> Fallback logout mechanisms</li>
+                    <li><i class="fas fa-check"></i> Activity logging for logout events</li>
+                </ul>
+            </div>
+            
+            <div class="demo-section">
+                <h3><i class="fas fa-code"></i> Implementation Details</h3>
+                <div class="info-box">
+                    <i class="fas fa-lightbulb"></i>
+                    <strong>Key Changes Made:</strong> Updated logout functions in user-dashboard.js, admin-dashboard.js, 
+                    and user-session.js to ensure complete session clearing and proper redirection.
+                </div>
+                
+                <h4>Logout Process Flow:</h4>
+                <div class="code-block">
+1. User clicks logout button
+2. All session data is cleared:
+   - localStorage items (educare_user, currentUser, etc.)
+   - sessionStorage contents
+   - cookies
+3. Success message is displayed
+4. User is redirected to login.html after 1-1.5 seconds
+5. Session manager updates navigation state
+                </div>
+            </div>
+            
+            <div class="demo-section">
+                <h3><i class="fas fa-rocket"></i> Quick Actions</h3>
+                <div class="button-group">
+                    <a href="login.html" class="btn btn-success">
+                        <i class="fas fa-sign-in-alt"></i> Go to Login
+                    </a>
+                    <a href="user-dashboard.html" class="btn btn-primary">
+                        <i class="fas fa-tachometer-alt"></i> User Dashboard
+                    </a>
+                    <a href="admin-dashboard.html" class="btn btn-warning">
+                        <i class="fas fa-user-shield"></i> Admin Dashboard
+                    </a>
+                    <a href="index.html" class="btn btn-primary">
+                        <i class="fas fa-home"></i> Home Page
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/user-session.js"></script>
+    <script src="js/logout-utility.js"></script>
+    <script>
+        // Check session status on page load
+        window.addEventListener('load', checkSessionStatus);
+        
+        function checkSessionStatus() {
+            const statusDiv = document.getElementById('sessionStatus');
+            const userData = localStorage.getItem('educare_user') || localStorage.getItem('currentUser');
+            const sessionId = localStorage.getItem('educare_session_id') || localStorage.getItem('currentSessionId');
+            
+            if (userData && sessionId) {
+                try {
+                    const user = JSON.parse(userData);
+                    statusDiv.innerHTML = `
+                        <div class="status-card">
+                            <h4><span class="status-indicator status-online"></span>User is logged in</h4>
+                            <p><strong>Name:</strong> ${user.full_name || 'Unknown'}</p>
+                            <p><strong>Email:</strong> ${user.email || 'Unknown'}</p>
+                            <p><strong>Role:</strong> ${user.role || 'Unknown'}</p>
+                            <p><strong>Session ID:</strong> ${sessionId}</p>
+                        </div>
+                    `;
+                } catch (error) {
+                    statusDiv.innerHTML = `
+                        <div class="status-card">
+                            <h4><span class="status-indicator status-error"></span>Error parsing user data</h4>
+                            <p>Error: ${error.message}</p>
+                        </div>
+                    `;
+                }
+            } else {
+                statusDiv.innerHTML = `
+                    <div class="status-card">
+                        <h4><span class="status-indicator status-offline"></span>No active session</h4>
+                        <p>User is not logged in. Please login to test logout functionality.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function testDashboardLogout() {
+            const resultDiv = document.getElementById('logoutResult');
+            resultDiv.innerHTML = '<p>Testing dashboard logout...</p>';
+            
+            // Simulate dashboard logout
+            if (typeof logout === 'function') {
+                logout();
+                resultDiv.innerHTML = `
+                    <div class="status-card">
+                        <h4><span class="status-indicator status-online"></span>Dashboard logout called</h4>
+                        <p>The logout function from the dashboard should handle the logout process.</p>
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="status-card">
+                        <h4><span class="status-indicator status-error"></span>Dashboard logout not available</h4>
+                        <p>Please navigate to a dashboard page to test this function.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function testSessionManagerLogout() {
+            const resultDiv = document.getElementById('logoutResult');
+            resultDiv.innerHTML = '<p>Testing session manager logout...</p>';
+            
+            if (window.userSessionManager) {
+                window.userSessionManager.logout();
+                resultDiv.innerHTML = `
+                    <div class="status-card">
+                        <h4><span class="status-indicator status-online"></span>Session manager logout called</h4>
+                        <p>Session manager should handle the logout process and redirect.</p>
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="status-card">
+                        <h4><span class="status-indicator status-error"></span>Session manager not available</h4>
+                        <p>Session manager is not loaded on this page.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function testUtilityLogout() {
+            const resultDiv = document.getElementById('logoutResult');
+            resultDiv.innerHTML = '<p>Testing utility logout...</p>';
+            
+            if (typeof performLogout === 'function') {
+                performLogout();
+                resultDiv.innerHTML = `
+                    <div class="status-card">
+                        <h4><span class="status-indicator status-online"></span>Utility logout called</span></h4>
+                        <p>Utility logout function should clear all data and redirect.</p>
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="status-card">
+                        <h4><span class="status-indicator status-error"></span>Utility logout not available</span></h4>
+                        <p>Logout utility script is not loaded.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function testManualLogout() {
+            const resultDiv = document.getElementById('logoutResult');
+            resultDiv.innerHTML = '<p>Testing manual logout...</p>';
+            
+            try {
+                // Manually clear all session data
+                const keysToRemove = [
+                    'educare_user',
+                    'educare_session_id', 
+                    'currentUser',
+                    'currentRole',
+                    'currentSessionId',
+                    'rememberMe'
+                ];
+                
+                keysToRemove.forEach(key => {
+                    localStorage.removeItem(key);
+                });
+                
+                sessionStorage.clear();
+                
+                // Clear cookies
+                document.cookie.split(";").forEach(function(c) { 
+                    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+                });
+                
+                resultDiv.innerHTML = `
+                    <div class="status-card">
+                        <h4><span class="status-indicator status-online"></span>Manual logout successful!</span></h4>
+                        <p>All session data has been manually cleared.</p>
+                        <p>Redirecting to login page in 3 seconds...</p>
+                    </div>
+                `;
+                
+                // Update session status
+                checkSessionStatus();
+                
+                // Redirect after delay
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 3000);
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="status-card">
+                        <h4><span class="status-indicator status-error"></span>Manual logout failed</span></h4>
+                        <p>Error: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function showAllSessionData() {
+            const dataDiv = document.getElementById('sessionData');
+            const allData = {};
+            
+            // Get all localStorage items
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                allData[key] = localStorage.getItem(key);
+            }
+            
+            // Get all sessionStorage items
+            const sessionData = {};
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                sessionData[key] = sessionStorage.getItem(key);
+            }
+            
+            dataDiv.innerHTML = `
+                <div class="status-card">
+                    <h4>LocalStorage Contents:</h4>
+                    <div class="code-block">${JSON.stringify(allData, null, 2)}</div>
+                    
+                    <h4>SessionStorage Contents:</h4>
+                    <div class="code-block">${JSON.stringify(sessionData, null, 2)}</div>
+                    
+                    <h4>Cookies:</h4>
+                    <div class="code-block">${document.cookie || 'No cookies found'}</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
+

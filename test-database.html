@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Test - Educare Institute</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Database Connection Test</h1>
+    
+    <div class="test-section info">
+        <h3>Configuration</h3>
+        <p><strong>Supabase URL:</strong> <span id="supabaseUrl"></span></p>
+        <p><strong>Anonymous Key:</strong> <span id="anonKey"></span></p>
+    </div>
+    
+    <div class="test-section">
+        <h3>Connection Test</h3>
+        <button onclick="testConnection()">Test Connection</button>
+        <div id="connectionResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Table Tests</h3>
+        <button onclick="testUsersTable()">Test Users Table</button>
+        <button onclick="testActivityLogsTable()">Test Activity Logs Table</button>
+        <div id="tableResults"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Create Test Data</h3>
+        <button onclick="createTestAdmin()">Create Test Admin</button>
+        <button onclick="createTestUser()">Create Test User</button>
+        <div id="createResults"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Test Login</h3>
+        <button onclick="testLogin()">Test Login with Admin</button>
+        <div id="loginResult"></div>
+    </div>
+
+    <script>
+        // Your Supabase credentials
+        const SUPABASE_URL = 'https://gjmuggtzcspazepfrowz.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqbXVnZ3R6Y3NwYXplcGZyb3d6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4MzIzNDEsImV4cCI6MjA3MDQwODM0MX0.7nDJOm0DC_cUpUNDNxqcT-I6E9BS7S4zFzE1J7YXzVY';
+        
+        // Initialize Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Display configuration
+        document.getElementById('supabaseUrl').textContent = SUPABASE_URL;
+        document.getElementById('anonKey').textContent = SUPABASE_ANON_KEY.substring(0, 20) + '...';
+        
+        function showResult(elementId, message, isSuccess = true) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<pre class="${isSuccess ? 'success' : 'error'}">${message}</pre>`;
+        }
+        
+        async function testConnection() {
+            try {
+                showResult('connectionResult', 'Testing connection...', true);
+                const { data, error } = await supabase.from('users').select('count').limit(1);
+                
+                if (error) {
+                    showResult('connectionResult', `Connection failed: ${error.message}`, false);
+                } else {
+                    showResult('connectionResult', '✅ Connection successful! Database is accessible.', true);
+                }
+            } catch (error) {
+                showResult('connectionResult', `Connection error: ${error.message}`, false);
+            }
+        }
+        
+        async function testUsersTable() {
+            try {
+                const { data, error } = await supabase.from('users').select('*').limit(5);
+                
+                if (error) {
+                    showResult('tableResults', `Users table error: ${error.message}`, false);
+                } else {
+                    showResult('tableResults', `✅ Users table accessible. Found ${data.length} users:\n${JSON.stringify(data, null, 2)}`, true);
+                }
+            } catch (error) {
+                showResult('tableResults', `Users table test error: ${error.message}`, false);
+            }
+        }
+        
+        async function testActivityLogsTable() {
+            try {
+                const { data, error } = await supabase.from('activity_logs').select('*').limit(5);
+                
+                if (error) {
+                    showResult('tableResults', `Activity logs table error: ${error.message}`, false);
+                } else {
+                    showResult('tableResults', `✅ Activity logs table accessible. Found ${data.length} logs:\n${JSON.stringify(data, null, 2)}`, true);
+                }
+            } catch (error) {
+                showResult('tableResults', `Activity logs table test error: ${error.message}`, false);
+            }
+        }
+        
+        async function createTestAdmin() {
+            try {
+                const { data, error } = await supabase
+                    .from('users')
+                    .insert([{
+                        email: 'admin@educare.com',
+                        password: 'admin123',
+                        full_name: 'System Administrator',
+                        role: 'admin',
+                        phone: '+1234567890',
+                        created_at: new Date().toISOString()
+                    }])
+                    .select()
+                    .single();
+                
+                if (error) {
+                    if (error.code === '23505') {
+                        showResult('createResults', 'Admin user already exists (duplicate email)', true);
+                    } else {
+                        showResult('createResults', `Admin creation error: ${error.message}`, false);
+                    }
+                } else {
+                    showResult('createResults', `✅ Admin user created successfully:\n${JSON.stringify(data, null, 2)}`, true);
+                }
+            } catch (error) {
+                showResult('createResults', `Admin creation error: ${error.message}`, false);
+            }
+        }
+        
+        async function createTestUser() {
+            try {
+                const { data, error } = await supabase
+                    .from('users')
+                    .insert([{
+                        email: 'test@educare.com',
+                        password: 'test123',
+                        full_name: 'Test User',
+                        role: 'student',
+                        phone: '+1987654321',
+                        created_at: new Date().toISOString()
+                    }])
+                    .select()
+                    .single();
+                
+                if (error) {
+                    if (error.code === '23505') {
+                        showResult('createResults', 'Test user already exists (duplicate email)', true);
+                    } else {
+                        showResult('createResults', `Test user creation error: ${error.message}`, false);
+                    }
+                } else {
+                    showResult('createResults', `✅ Test user created successfully:\n${JSON.stringify(data, null, 2)}`, true);
+                }
+            } catch (error) {
+                showResult('createResults', `Test user creation error: ${error.message}`, false);
+            }
+        }
+        
+        async function testLogin() {
+            try {
+                const { data: user, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('email', 'admin@educare.com')
+                    .eq('password', 'admin123')
+                    .single();
+                
+                if (error) {
+                    showResult('loginResult', `Login test error: ${error.message}`, false);
+                } else if (!user) {
+                    showResult('loginResult', '❌ Login failed: User not found', false);
+                } else {
+                    showResult('loginResult', `✅ Login test successful:\n${JSON.stringify(user, null, 2)}`, true);
+                }
+            } catch (error) {
+                showResult('loginResult', `Login test error: ${error.message}`, false);
+            }
+        }
+        
+        // Auto-run connection test on page load
+        window.addEventListener('load', testConnection);
+    </script>
+</body>
+</html>

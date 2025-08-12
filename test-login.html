@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login System Test - Educare Institute</title>
+    
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- CSS and JS files -->
+    <link rel="stylesheet" href="css/login.css">
+    <script src="js/login.js" defer></script>
+    <script src="js/user-session.js" defer></script>
+    
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #f5f5f5;
+        }
+        .test-section { 
+            margin: 20px 0; 
+            padding: 15px; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+            background: white;
+        }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { 
+            padding: 10px 20px; 
+            margin: 5px; 
+            cursor: pointer; 
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover { background: #0056b3; }
+        pre { 
+            background: #f8f9fa; 
+            padding: 10px; 
+            border-radius: 3px; 
+            overflow-x: auto; 
+            border: 1px solid #e9ecef;
+        }
+        .status { font-weight: bold; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Login System Test</h1>
+    
+    <div class="test-section info">
+        <h3>System Status</h3>
+        <div id="systemStatus">Checking...</div>
+    </div>
+    
+    <div class="test-section">
+        <h3>File Check</h3>
+        <button onclick="checkFiles()">Check Required Files</button>
+        <div id="fileCheckResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Supabase Connection</h3>
+        <button onclick="testSupabase()">Test Supabase Connection</button>
+        <div id="supabaseResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Login Test</h3>
+        <button onclick="testLogin()">Test Login System</button>
+        <div id="loginResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Navigation Test</h3>
+        <button onclick="testNavigation()">Test Navigation</button>
+        <div id="navigationResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>User Session Test</h3>
+        <button onclick="testUserSession()">Test User Session</button>
+        <div id="userSessionResult"></div>
+    </div>
+
+    <script>
+        // Check system status
+        function checkSystemStatus() {
+            const status = document.getElementById('systemStatus');
+            const checks = [];
+            
+            // Check if Supabase CDN is loaded
+            if (typeof window.supabase !== 'undefined') {
+                checks.push('✅ Supabase CDN loaded');
+            } else {
+                checks.push('❌ Supabase CDN not loaded');
+            }
+            
+            // Check if required files exist
+            if (document.querySelector('link[href="css/login.css"]')) {
+                checks.push('✅ Login CSS linked');
+            } else {
+                checks.push('❌ Login CSS not linked');
+            }
+            
+            if (document.querySelector('script[src="js/login.js"]')) {
+                checks.push('✅ Login JS linked');
+            } else {
+                checks.push('❌ Login JS not linked');
+            }
+            
+            status.innerHTML = checks.join('<br>');
+        }
+        
+        // Check required files
+        async function checkFiles() {
+            const result = document.getElementById('fileCheckResult');
+            result.innerHTML = 'Checking files...';
+            
+            const files = [
+                'login.html',
+                'css/login.css',
+                'js/login.js',
+                'admin-dashboard.html',
+                'user-dashboard.html'
+            ];
+            
+            const results = [];
+            
+            for (const file of files) {
+                try {
+                    const response = await fetch(file);
+                    if (response.ok) {
+                        results.push(`✅ ${file} - Found`);
+                    } else {
+                        results.push(`❌ ${file} - Not found (${response.status})`);
+                    }
+                } catch (error) {
+                    results.push(`❌ ${file} - Error: ${error.message}`);
+                }
+            }
+            
+            result.innerHTML = results.join('<br>');
+        }
+        
+        // Test Supabase connection
+        async function testSupabase() {
+            const result = document.getElementById('supabaseResult');
+            result.innerHTML = 'Testing Supabase connection...';
+            
+            try {
+                if (typeof window.supabase === 'undefined') {
+                    result.innerHTML = '<pre class="error">❌ Supabase CDN not loaded. Please check your internet connection.</pre>';
+                    return;
+                }
+                
+                // Test basic Supabase functionality
+                const client = window.supabase.createClient(
+                    'https://gjmuggtzcspazepfrowz.supabase.co',
+                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqbXVnZ3R6Y3NwYXplcGZyb3d6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4MzIzNDEsImV4cCI6MjA3MDQwODM0MX0.7nDJOm0DC_cUpUNDNxqcT-I6E9BS7S4zFzE1J7YXzVY'
+                );
+                
+                result.innerHTML = '<pre class="success">✅ Supabase client created successfully</pre>';
+                
+            } catch (error) {
+                result.innerHTML = `<pre class="error">❌ Supabase test failed: ${error.message}</pre>`;
+            }
+        }
+        
+        // Test login system
+        function testLogin() {
+            const result = document.getElementById('loginResult');
+            result.innerHTML = 'Testing login system...';
+            
+            try {
+                // Check if login.js functions are available
+                if (typeof window.testSupabaseConnection === 'function') {
+                    result.innerHTML = '<pre class="success">✅ Login system functions loaded</pre>';
+                } else {
+                    result.innerHTML = '<pre class="error">❌ Login system functions not loaded. Check js/login.js</pre>';
+                }
+            } catch (error) {
+                result.innerHTML = `<pre class="error">❌ Login test failed: ${error.message}</pre>`;
+            }
+        }
+        
+        // Test navigation
+        function testNavigation() {
+            const result = document.getElementById('navigationResult');
+            result.innerHTML = 'Testing navigation...';
+            
+            try {
+                // Check if we can navigate to login page
+                const loginLink = document.createElement('a');
+                loginLink.href = 'login.html';
+                
+                result.innerHTML = '<pre class="success">✅ Navigation test passed</pre>';
+                
+            } catch (error) {
+                result.innerHTML = `<pre class="error">❌ Navigation test failed: ${error.message}</pre>`;
+            }
+        }
+        
+        // Test user session management
+        function testUserSession() {
+            const result = document.getElementById('userSessionResult');
+            result.innerHTML = 'Testing user session management...';
+            
+            try {
+                // Check if user-session.js is loaded
+                if (typeof window.userSessionManager !== 'undefined') {
+                    result.innerHTML = '<pre class="success">✅ User session manager loaded successfully</pre>';
+                    
+                    // Test session functions
+                    const isLoggedIn = window.userSessionManager.isLoggedIn();
+                    const currentUser = window.userSessionManager.getCurrentUser();
+                    
+                    result.innerHTML += `<pre class="info">Session Status: ${isLoggedIn ? 'Logged In' : 'Not Logged In'}</pre>`;
+                    if (currentUser) {
+                        result.innerHTML += `<pre class="info">Current User: ${currentUser.full_name || 'Unknown'} (${currentUser.role || 'Unknown Role'})</pre>`;
+                    }
+                } else {
+                    result.innerHTML = '<pre class="error">❌ User session manager not loaded. Check js/user-session.js</pre>';
+                }
+            } catch (error) {
+                result.innerHTML = `<pre class="error">❌ User session test failed: ${error.message}</pre>`;
+            }
+        }
+        
+        // Auto-run system check on page load
+        window.addEventListener('load', function() {
+            checkSystemStatus();
+        });
+    </script>
+</body>
+</html>

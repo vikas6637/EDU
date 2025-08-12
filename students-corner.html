@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Educare Institute - Forum For Success...</title>
+        <link rel="stylesheet" href="css/styles.css" />
+        <link rel="stylesheet" href="css/students-corner.css" />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+        <script>
+            // Set the workerSrc property before using PDF.js
+            pdfjsLib.GlobalWorkerOptions.workerSrc =
+                "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js";
+        </script>
+    </head>
+    <body>
+        <!-- Header and Navigation -->
+        <header id="header" class="header">
+            <div class="container">
+                <div class="logo">
+                    <img
+                        src="images/logo.png"
+                        alt="Educare-Institute Logo"
+                        class="logo-image"
+                    />
+                    <a href="index.html">
+                        <span class="logo-text"
+                            >Educare <span class="accent">Institute</span></span
+                        >
+                    </a>
+                </div>
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="courses.html">Courses</a></li>
+                        <li>
+                            <a href="students-corner.html" class="active"
+                                >Students Corner</a
+                            >
+                        </li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li>
+                            <a href="courses.html#contact" class="btn-nav"
+                                >Contact Us</a
+                            >
+                        </li>
+                    </ul>
+                    <div class="mobile-menu-btn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Mobile Navigation -->
+        <div class="mobile-nav">
+            <ul class="mobile-nav-list">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li>
+                    <a href="students-corner.html" class="active"
+                        >Students Corner</a
+                    >
+                </li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li>
+                    <a href="courses.html#contact" class="btn-nav"
+                        >Contact Us</a
+                    >
+                </li>
+            </ul>
+        </div>
+
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <h1>Students Corner</h1>
+                <p>Access study materials, video lectures, and worksheets</p>
+            </div>
+        </section>
+
+        <!-- Materials Section -->
+        <section id="materials" class="materials">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Study Resources</h2>
+                    <p>
+                        Select your class and subject to access notes, videos,
+                        and worksheets
+                    </p>
+                </div>
+
+                <!-- Selection Navigation -->
+                <div class="selection-nav">
+                    <div class="nav-item">
+                        <label for="classSelect">Class:</label>
+                        <select id="classSelect" class="nav-select">
+                            <option value="">Select Class</option>
+                            <option value="6">Class VI</option>
+                            <option value="7">Class VII</option>
+                            <option value="8">Class VIII</option>
+                            <option value="9">Class IX</option>
+                            <option value="10">Class X</option>
+                            <option value="11">Class XI</option>
+                            <option value="12">Class XII</option>
+                        </select>
+                    </div>
+
+                    <span class="nav-arrow"
+                        ><i class="fas fa-chevron-right"></i
+                    ></span>
+
+                    <div class="nav-item">
+                        <label for="subjectSelect">Subject:</label>
+                        <select id="subjectSelect" class="nav-select" disabled>
+                            <option value="">Select Subject</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Content Tabs -->
+                <div
+                    class="content-tabs"
+                    id="contentTabs"
+                    style="display: none"
+                >
+                    <button class="content-tab-btn active" data-content="notes">
+                        <i class="fas fa-file-pdf"></i>
+                        Notes
+                    </button>
+                    <button class="content-tab-btn" data-content="videos">
+                        <i class="fas fa-play-circle"></i>
+                        Videos
+                    </button>
+                    <button class="content-tab-btn" data-content="worksheets">
+                        <i class="fas fa-download"></i>
+                        Worksheets
+                    </button>
+                </div>
+
+                <!-- Content Sections -->
+                <div class="content-section">
+                    <!-- Notes Tab -->
+                    <div id="notes-content" class="content-tab-pane active">
+                        <div class="no-content" id="notes-no-content">
+                            <i class="fas fa-file-pdf"></i>
+                            <h3>No Notes Available</h3>
+                            <p>
+                                Please select a class and subject to view notes
+                            </p>
+                        </div>
+                        <div
+                            class="material-grid"
+                            id="notes-grid"
+                            style="display: none"
+                        ></div>
+                    </div>
+
+                    <!-- Videos Tab -->
+                    <div id="videos-content" class="content-tab-pane">
+                        <div class="no-content" id="videos-no-content">
+                            <i class="fas fa-play-circle"></i>
+                            <h3>No Videos Available</h3>
+                            <p>
+                                Please select a class and subject to view video
+                                lectures
+                            </p>
+                        </div>
+                        <div
+                            class="material-grid"
+                            id="videos-grid"
+                            style="display: none"
+                        ></div>
+                    </div>
+
+                    <!-- Worksheets Tab -->
+                    <div id="worksheets-content" class="content-tab-pane">
+                        <div class="no-content" id="worksheets-no-content">
+                            <i class="fas fa-download"></i>
+                            <h3>No Worksheets Available</h3>
+                            <p>
+                                Please select a class and subject to view
+                                worksheets
+                            </p>
+                        </div>
+                        <div
+                            class="material-grid"
+                            id="worksheets-grid"
+                            style="display: none"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PDF Viewer Modal -->
+        <div id="pdfModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="pdfTitle">Document Title</h2>
+                    <span class="close-modal">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="pdf-container">
+                        <div id="pdfViewer"></div>
+                    </div>
+                    <div class="pdf-controls">
+                        <button id="prevPage" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </button>
+                        <span id="pageInfo"
+                            >Page <span id="currentPage">0</span> of
+                            <span id="totalPages">0</span></span
+                        >
+                        <button id="nextPage" class="btn btn-sm btn-secondary">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <select id="zoomLevel" class="zoom-select">
+                            <option value="0.5">50%</option>
+                            <option value="0.75">75%</option>
+                            <option value="1" selected>100%</option>
+                            <option value="1.25">125%</option>
+                            <option value="1.5">150%</option>
+                            <option value="2">200%</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video Modal -->
+        <div id="videoModal" class="video-modal">
+            <div class="video-modal-content">
+                <div class="video-modal-header">
+                    <h2 id="videoTitle">Video Title</h2>
+                    <span
+                        class="close-video-modal"
+                        role="button"
+                        tabindex="0"
+                        aria-label="Close Video"
+                        >&times;</span
+                    >
+                </div>
+                <div class="video-modal-body">
+                    <div class="video-embed">
+                        <iframe id="videoFrame" src="" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Action Buttons -->
+        <div class="floating-buttons">
+            <a
+                href="tel:+919044930927"
+                class="float-btn call-btn"
+                aria-label="Call us"
+            >
+                <i class="fas fa-phone"></i>
+            </a>
+            <a
+                href="https://wa.me/919876543210"
+                class="float-btn whatsapp-btn"
+                target="_blank"
+                aria-label="WhatsApp"
+            >
+                <i class="fab fa-whatsapp"></i>
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-about">
+                        <h3>Educare Institute</h3>
+                        <p>
+                            Educare Institute is a premier coaching institute
+                            dedicated to providing quality education to students
+                            from class VI to XII.
+                        </p>
+                    </div>
+                    <div class="footer-links">
+                        <h3>Quick Links</h3>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="courses.html">Courses</a></li>
+                            <li>
+                                <a href="students-corner.html"
+                                    >Students Corner</a
+                                >
+                            </li>
+                            <li><a href="gallery.html">Gallery</a></li>
+                            <li>
+                                <a href="courses.html#contact">Contact Us</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="footer-contact">
+                        <h3>Contact Us</h3>
+                        <p>
+                            <i class="fas fa-map-marker-alt"></i>SN 4/119,Vibhav
+                            Khand -4, Vibhav Khand, Gomti Nagar, Lucknow,Uttar
+                            Pradesh 226010
+                        </p>
+                        <p><i class="fas fa-phone"></i> +91-9044930927</p>
+                        <p>
+                            <i class="fas fa-envelope"></i>
+                            info@educareinstitute.co.in
+                        </p>
+                    </div>
+                    <div class="footer-social">
+                        <h3>Follow Us</h3>
+                        <div class="social-icons">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 Educare Institute. All Rights Reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+        <script src="js/main.js"></script>
+        <script src="js/navigation.js"></script>
+        <script src="js/students-corner.js"></script>
+    </body>
+</html>
+

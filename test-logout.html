@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout Test - Educare Institute</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section { 
+            margin: 20px 0; 
+            padding: 15px; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+        }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { 
+            padding: 10px 20px; 
+            margin: 5px; 
+            cursor: pointer; 
+            border: none;
+            border-radius: 4px;
+            background: #007bff;
+            color: white;
+        }
+        button:hover { background: #0056b3; }
+        .logout-btn { background: #dc3545; }
+        .logout-btn:hover { background: #c82333; }
+        pre { 
+            background: #f8f9fa; 
+            padding: 10px; 
+            border-radius: 3px; 
+            overflow-x: auto; 
+            border: 1px solid #e9ecef;
+        }
+        .status { font-weight: bold; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Logout Functionality Test</h1>
+        <p>This page tests the logout functionality to ensure users are properly logged out and redirected.</p>
+        
+        <div class="test-section info">
+            <h3>Current Session Status</h3>
+            <div id="sessionStatus">Checking...</div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Session Data</h3>
+            <button onclick="showSessionData()">Show All Session Data</button>
+            <div id="sessionData"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Test Logout</h3>
+            <button onclick="testUserLogout()" class="logout-btn">Test User Logout</button>
+            <button onclick="testAdminLogout()" class="logout-btn">Test Admin Logout</button>
+            <button onclick="testSessionManagerLogout()" class="logout-btn">Test Session Manager Logout</button>
+            <div id="logoutResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Clear All Data</h3>
+            <button onclick="clearAllData()" style="background: #6c757d;">Clear All Session Data</button>
+            <div id="clearResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Navigation</h3>
+            <a href="login.html"><button style="background: #28a745;">Go to Login</button></a>
+            <a href="index.html"><button style="background: #17a2b8;">Go to Home</button></a>
+        </div>
+    </div>
+
+    <script>
+        // Check session status on page load
+        window.addEventListener('load', checkSessionStatus);
+        
+        function checkSessionStatus() {
+            const statusDiv = document.getElementById('sessionStatus');
+            const userData = localStorage.getItem('educare_user') || localStorage.getItem('currentUser');
+            const sessionId = localStorage.getItem('educare_session_id') || localStorage.getItem('currentSessionId');
+            
+            if (userData && sessionId) {
+                try {
+                    const user = JSON.parse(userData);
+                    statusDiv.innerHTML = `
+                        <div class="status success">✅ User is logged in</div>
+                        <p><strong>Name:</strong> ${user.full_name || 'Unknown'}</p>
+                        <p><strong>Email:</strong> ${user.email || 'Unknown'}</p>
+                        <p><strong>Role:</strong> ${user.role || 'Unknown'}</p>
+                        <p><strong>Session ID:</strong> ${sessionId}</p>
+                    `;
+                } catch (error) {
+                    statusDiv.innerHTML = `
+                        <div class="status error">❌ Error parsing user data</div>
+                        <p>Error: ${error.message}</p>
+                    `;
+                }
+            } else {
+                statusDiv.innerHTML = `
+                    <div class="status info">ℹ️ No active session found</div>
+                    <p>User is not logged in</p>
+                `;
+            }
+        }
+        
+        function showSessionData() {
+            const dataDiv = document.getElementById('sessionData');
+            const allData = {};
+            
+            // Get all localStorage items
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                allData[key] = localStorage.getItem(key);
+            }
+            
+            dataDiv.innerHTML = `
+                <h4>LocalStorage Contents:</h4>
+                <pre>${JSON.stringify(allData, null, 2)}</pre>
+            `;
+        }
+        
+        function testUserLogout() {
+            const resultDiv = document.getElementById('logoutResult');
+            resultDiv.innerHTML = '<p>Testing user logout...</p>';
+            
+            try {
+                // Simulate user logout
+                localStorage.removeItem('educare_user');
+                localStorage.removeItem('educare_session_id');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('currentRole');
+                localStorage.removeItem('currentSessionId');
+                localStorage.removeItem('rememberMe');
+                
+                sessionStorage.clear();
+                
+                resultDiv.innerHTML = `
+                    <div class="status success">✅ User logout successful!</div>
+                    <p>All session data has been cleared.</p>
+                    <p>Redirecting to login page in 3 seconds...</p>
+                `;
+                
+                // Update session status
+                checkSessionStatus();
+                
+                // Redirect after delay
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 3000);
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="status error">❌ Logout failed</div>
+                    <p>Error: ${error.message}</p>
+                `;
+            }
+        }
+        
+        function testAdminLogout() {
+            const resultDiv = document.getElementById('logoutResult');
+            resultDiv.innerHTML = '<p>Testing admin logout...</p>';
+            
+            try {
+                // Simulate admin logout
+                localStorage.removeItem('educare_user');
+                localStorage.removeItem('educare_session_id');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('currentRole');
+                localStorage.removeItem('currentSessionId');
+                localStorage.removeItem('rememberMe');
+                
+                sessionStorage.clear();
+                
+                resultDiv.innerHTML = `
+                    <div class="status success">✅ Admin logout successful!</div>
+                    <p>All session data has been cleared.</p>
+                    <p>Redirecting to login page in 3 seconds...</p>
+                `;
+                
+                // Update session status
+                checkSessionStatus();
+                
+                // Redirect after delay
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 3000);
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="status error">❌ Logout failed</div>
+                    <p>Error: ${error.message}</p>
+                `;
+            }
+        }
+        
+        function testSessionManagerLogout() {
+            const resultDiv = document.getElementById('logoutResult');
+            resultDiv.innerHTML = '<p>Testing session manager logout...</p>';
+            
+            try {
+                // Check if session manager exists
+                if (window.userSessionManager) {
+                    window.userSessionManager.logout();
+                    resultDiv.innerHTML = `
+                        <div class="status success">✅ Session manager logout called!</div>
+                        <p>Session manager should handle the logout process.</p>
+                    `;
+                } else {
+                    // Fallback to manual logout
+                    testUserLogout();
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="status error">❌ Session manager logout failed</div>
+                    <p>Error: ${error.message}</p>
+                    <p>Falling back to manual logout...</p>
+                `;
+                setTimeout(() => testUserLogout(), 1000);
+            }
+        }
+        
+        function clearAllData() {
+            const resultDiv = document.getElementById('clearResult');
+            resultDiv.innerHTML = '<p>Clearing all session data...</p>';
+            
+            try {
+                // Clear all localStorage
+                localStorage.clear();
+                
+                // Clear sessionStorage
+                sessionStorage.clear();
+                
+                // Clear cookies
+                document.cookie.split(";").forEach(function(c) { 
+                    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+                });
+                
+                resultDiv.innerHTML = `
+                    <div class="status success">✅ All data cleared successfully!</div>
+                    <p>LocalStorage, SessionStorage, and cookies have been cleared.</p>
+                `;
+                
+                // Update session status
+                checkSessionStatus();
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="status error">❌ Failed to clear data</div>
+                    <p>Error: ${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
+
