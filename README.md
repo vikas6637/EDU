@@ -273,3 +273,7 @@ This project is created for Educare Institute. Please ensure proper licensing fo
 ---
 
 **Note**: This is a comprehensive login system designed for educational institutions. Make sure to implement proper security measures and comply with data protection regulations in your region.
+
+
+
+<!-- this is regarding the project -->
